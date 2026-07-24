@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
   static final Dio _dio = Dio(BaseOptions(
-    baseUrl: dotenv.env['API_URL'] ?? 'http://127.0.0.1:5001',
+    baseUrl: dotenv.env['API_URL'] ?? 'https://merkato-backend.onrender.com',
     connectTimeout: const Duration(seconds: 30),
     receiveTimeout: const Duration(seconds: 30),
   ));
