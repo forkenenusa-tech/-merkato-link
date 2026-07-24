@@ -1,117 +1,207 @@
-# MerkatoLink Backend - Free Deployment Guide
+# MerkatoLink — Full Deployment Guide (Free)
 
-Deploy the API for **free** using **MongoDB Atlas** (database) + **Render** (hosting).
+Deploy **backend + 4 dashboards + mobile web app** so everything works together online.
 
-## 1. Push code to GitHub
+Replace `YOUR-BACKEND-URL` with your actual Render URL (e.g. `https://merkato-backend.onrender.com`).
 
-Repository: https://github.com/forkenenusa-tech/-merkato-link
+---
 
-```powershell
-cd D:\mykey_project\Flutter-website\merkato_link
-git remote add origin https://github.com/forkenenusa-tech/-merkato-link.git
-git commit -m "Initial MerkatoLink platform commit"
-git branch -M main
-git push -u origin main
-```
-
-If the remote already exists:
-
-```powershell
-git remote set-url origin https://github.com/forkenenusa-tech/-merkato-link.git
-git push -u origin main
-```
-
-## 2. Create free MongoDB Atlas database
-
-1. Go to https://www.mongodb.com/cloud/atlas/register
-2. Create a **free M0 cluster**
-3. Database Access → Add user (username + password)
-4. Network Access → Add IP Address → **Allow Access from Anywhere** (`0.0.0.0/0`)
-5. Connect → Drivers → copy connection string, e.g.:
-   ```
-   mongodb+srv://USER:PASSWORD@cluster0.xxxxx.mongodb.net/merkato
-   ```
-6. Replace `USER`, `PASSWORD`, and keep database name `merkato`
-
-## 3. Deploy backend on Render (free tier)
-
-1. Go to https://render.com and sign up (GitHub login works)
-2. **New** → **Blueprint**
-3. Connect repo: `forkenenusa-tech/-merkato-link`
-4. Render reads `render.yaml` at repo root and creates `merkato-backend`
-5. When prompted, set **MONGO_URI** to your Atlas connection string
-6. Click **Apply** and wait for deploy (~3–5 minutes)
-
-Your API URL will look like:
+## Architecture
 
 ```
-https://merkato-backend.onrender.com
+                    ┌─────────────────────────┐
+                    │   MongoDB Atlas (free)   │
+                    └───────────┬─────────────┘
+                                │
+                    ┌───────────▼─────────────┐
+                    │  Backend API (Render)    │
+                    │  YOUR-BACKEND-URL        │
+                    └───────────┬─────────────┘
+                                │
+        ┌───────────┬───────────┼───────────┬───────────┐
+        │           │           │           │           │
+   Admin Web   Seller Web   Staff Web   Driver Web   Mobile Web
+   (Vercel)    (Vercel)     (Vercel)    (Vercel)   (GitHub Pages)
 ```
 
-Test it:
+---
+
+## Step 1 — Backend (Render) ✅
+
+Already set up. Confirm health:
 
 ```
-https://merkato-backend.onrender.com/api/health
+YOUR-BACKEND-URL/api/health
 ```
 
-Expected response:
+→ `{"status":"healthy","database":"connected"}`
 
-```json
-{"status":"healthy","database":"connected"}
-```
-
-## 4. Seed production database (one time)
-
-After deploy succeeds, open Render → **merkato-backend** → **Shell** and run:
+Seed once in Render Shell:
 
 ```bash
 npm run seed
 ```
 
-Default login accounts (after seed):
+---
 
-| Role   | Email            | Password    |
-|--------|------------------|-------------|
-| Admin  | admin@test.com   | password123 |
-| Seller | seller@test.com  | password123 |
-| Staff  | staff@test.com   | password123 |
-| Driver | driver@test.com  | password123 |
-| User   | user@test.com    | password123 |
+## Step 2 — Deploy 4 dashboards on Vercel (separate URLs)
 
-## 5. Point apps to deployed API
+Go to [vercel.com](https://vercel.com) → **Add New Project** → import `forkenenusa-tech/-merkato-link`.
 
-### Flutter mobile (`merkato-mobile/.env`)
+Create **4 separate projects** from the same repo:
+
+| Project name   | Root Directory  | Environment variable |
+|----------------|-----------------|----------------------|
+| `merkato-admin`  | `merkato-admin`  | `VITE_API_URL=YOUR-BACKEND-URL` |
+| `merkato-seller` | `merkato-seller` | `VITE_API_URL=YOUR-BACKEND-URL` |
+| `merkato-staff`  | `merkato-staff`  | `VITE_API_URL=YOUR-BACKEND-URL` |
+| `merkato-driver` | `merkato-driver` | `VITE_API_URL=YOUR-BACKEND-URL` |
+
+### For each project:
+
+1. **Import** GitHub repo
+2. **Root Directory** → Edit → set folder (e.g. `merkato-admin`)
+3. **Environment Variables** → add:
+   - Key: `VITE_API_URL`
+   - Value: `https://merkato-backend.onrender.com` (your Render URL, **no** `/api` at end)
+4. Click **Deploy**
+
+You will get URLs like:
+
+| App    | Example URL                              | Login (after seed)   |
+|--------|------------------------------------------|----------------------|
+| Admin  | `https://merkato-admin.vercel.app`       | admin@test.com       |
+| Seller | `https://merkato-seller.vercel.app`    | seller@test.com      |
+| Staff  | `https://merkato-staff.vercel.app`       | staff@test.com       |
+| Driver | `https://merkato-driver.vercel.app`    | driver@test.com      |
+
+Password for all: `password123`
+
+---
+
+## Step 3 — Deploy mobile app as website (GitHub Pages)
+
+The Flutter app can be used in a **browser** (same as mobile UI).
+
+### One-time GitHub setup
+
+1. GitHub repo → **Settings** → **Pages**
+2. **Source** → **GitHub Actions**
+3. **Settings** → **Secrets and variables** → **Actions**
+4. Add repository variable (or secret):
+   - Name: `API_URL`
+   - Value: `https://merkato-backend.onrender.com`
+
+### Deploy
+
+Push to `main` branch — GitHub Actions builds and deploys automatically.
+
+Mobile web URL:
+
+```
+https://forkenenusa-tech.github.io/-merkato-link/
+```
+
+Login: `user@test.com` / `password123`
+
+---
+
+## Step 4 — Android / iOS app (optional)
+
+For installing on phones, build locally:
+
+```powershell
+cd merkato-mobile
+# Set production API in .env:
+# API_URL=https://merkato-backend.onrender.com
+flutter pub get
+flutter build apk --release
+```
+
+APK output: `merkato-mobile/build/app/outputs/flutter-apk/app-release.apk`
+
+Share the APK or publish to Google Play.
+
+---
+
+## Step 5 — Connect everything (CORS)
+
+On Render → backend service → **Environment**, set `CLIENT_URL` to:
+
+```
+*
+```
+
+Or list all your frontend URLs (comma-separated, no spaces):
+
+```
+https://merkato-admin.vercel.app,https://merkato-seller.vercel.app,https://merkato-staff.vercel.app,https://merkato-driver.vercel.app,https://forkenenusa-tech.github.io
+```
+
+Save → Render redeploys.
+
+---
+
+## Environment variables cheat sheet
+
+### Render (backend)
+
+| Key         | Example value |
+|-------------|---------------|
+| `MONGO_URI` | `mongodb+srv://forkenenusa_db_user:PASSWORD@cluster0.eekmyfn.mongodb.net/merkato?retryWrites=true&w=majority&appName=Cluster0` |
+| `JWT_SECRET`| `merkato_jwt_secret_2026` |
+| `CLIENT_URL`| `*` |
+| `NODE_ENV`  | `production` |
+
+### Vercel (each dashboard)
+
+| Key            | Value |
+|----------------|-------|
+| `VITE_API_URL` | `https://merkato-backend.onrender.com` |
+
+### GitHub Actions (mobile web)
+
+| Key       | Value |
+|-----------|-------|
+| `API_URL` | `https://merkato-backend.onrender.com` |
+
+### Flutter local / APK (`merkato-mobile/.env`)
 
 ```env
 API_URL=https://merkato-backend.onrender.com
 ```
 
-### React dashboards (Vercel env or local `.env`)
+---
 
-```env
-VITE_API_URL=https://merkato-backend.onrender.com/api
-```
+## Test that everything works
 
-Redeploy dashboards after changing env vars.
+1. **Backend:** `YOUR-BACKEND-URL/api/health` → healthy + connected
+2. **Admin:** login → see dashboard stats
+3. **Seller:** login → see products/orders
+4. **Mobile web:** open URL → login → products load
+5. **Cross-check:** add product in Seller → appears in Mobile app
 
-## 6. Optional: deploy dashboards free on Vercel
+---
 
-Each dashboard folder already has `vercel.json`:
+## Troubleshooting
 
-- `merkato-admin`
-- `merkato-seller`
-- `merkato-staff`
-- `merkato-driver`
+| Problem | Fix |
+|---------|-----|
+| CORS error in browser | Set `CLIENT_URL=*` on Render and redeploy |
+| Login fails | Run `npm run seed` in Render Shell |
+| Slow first load | Render free tier wakes from sleep (~30–60 sec) |
+| Mobile shows no products | Check `API_URL` points to Render, not localhost |
+| Vercel build fails | Confirm Root Directory is set correctly |
 
-1. https://vercel.com → Import GitHub repo
-2. Set **Root Directory** to e.g. `merkato-admin`
-3. Add env: `VITE_API_URL=https://merkato-backend.onrender.com/api`
-4. Deploy
+---
 
-Repeat for each dashboard.
+## Your live URLs (fill in after deploy)
 
-## Notes
-
-- **Render free tier** sleeps after ~15 min idle; first request may take 30–60 seconds to wake up.
-- **Never commit** `.env` files with real passwords (only `.env.example` is in git).
-- If health check shows `"database":"disconnected"`, verify `MONGO_URI` and Atlas network access.
+| Service      | URL |
+|--------------|-----|
+| Backend API  | `https://________________.onrender.com` |
+| Admin        | `https://________________.vercel.app` |
+| Seller       | `https://________________.vercel.app` |
+| Staff        | `https://________________.vercel.app` |
+| Driver       | `https://________________.vercel.app` |
+| Mobile Web   | `https://forkenenusa-tech.github.io/-merkato-link/` |
