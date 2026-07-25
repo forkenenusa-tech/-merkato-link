@@ -8,7 +8,7 @@ class ApiService {
   
   static Dio get dio {
     _dioInstance ??= Dio(BaseOptions(
-      baseUrl: dotenv.env['API_URL'] ?? 'https://merkato-link.onrender.com',
+      baseUrl: 'https://merkato-link.onrender.com',
       connectTimeout: const Duration(seconds: 30),
       receiveTimeout: const Duration(seconds: 30),
     ));
