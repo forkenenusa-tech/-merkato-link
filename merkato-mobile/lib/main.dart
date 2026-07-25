@@ -5,10 +5,16 @@ import 'package:merkato_mobile/screens/splash_screen.dart';
 import 'package:merkato_mobile/theme/app_theme.dart';
 
 void main() async {
-  // Load environment variables
-  // For physical device testing (TECNO KB7j): using .env which has computer IP 192.168.1.9
-  // For emulator testing: use .env.emulator file instead
-  await dotenv.load(fileName: ".env");
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  try {
+    // Load environment variables
+    await dotenv.load(fileName: ".env");
+  } catch (e) {
+    // If .env fails to load, continue with default values
+    print('Warning: Failed to load .env file: $e');
+  }
+  
   runApp(const ProviderScope(child: MyApp()));
 }
 
