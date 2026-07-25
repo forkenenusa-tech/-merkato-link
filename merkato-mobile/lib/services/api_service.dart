@@ -9,8 +9,8 @@ class ApiService {
   static Dio get dio {
     _dioInstance ??= Dio(BaseOptions(
       baseUrl: 'https://merkato-link.onrender.com',
-      connectTimeout: const Duration(seconds: 30),
-      receiveTimeout: const Duration(seconds: 30),
+      connectTimeout: const Duration(seconds: 60),
+      receiveTimeout: const Duration(seconds: 60),
     ));
     return _dioInstance!;
   }
