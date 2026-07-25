@@ -37,10 +37,19 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Database connection
-mongoose.connect(process.env.MONGO_URI!)
-  .then(() => console.log('✅ MongoDB Atlas connected successfully'))
-  .catch((err) => console.error('❌ MongoDB connection error:', err));
+// Database connection with retry logic
+const connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URI!);
+    console.log('✅ MongoDB Atlas connected successfully');
+  } catch (err) {
+    console.error('❌ MongoDB connection error:', err);
+    console.log('🔄 Retrying connection in 5 seconds...');
+    setTimeout(connectDB, 5000);
+  }
+};
+
+connectDB();
 
 // API Routes
 app.use('/api/auth', authRoutes);
