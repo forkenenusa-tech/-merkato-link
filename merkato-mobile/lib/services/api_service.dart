@@ -7,21 +7,48 @@ class ApiService {
   static Dio? _dioInstance;
   
   static Dio get dio {
-    _dioInstance ??= Dio(BaseOptions(
-      baseUrl: 'https://merkato-link.onrender.com',
-      connectTimeout: const Duration(seconds: 60),
-      receiveTimeout: const Duration(seconds: 60),
-    ));
+    if (_dioInstance == null) {
+      _dioInstance = Dio(BaseOptions(
+        baseUrl: 'https://merkato-link.onrender.com',
+        connectTimeout: const Duration(seconds: 60),
+        receiveTimeout: const Duration(seconds: 60),
+      ));
+      
+      // Add interceptor for automatic token attachment
+      _dioInstance!.interceptors.add(
+        InterceptorsWrapper(
+          onRequest: (options, handler) async {
+            // Add token to all requests except register and login
+            if (!options.path.contains('/api/auth/register') && 
+                !options.path.contains('/api/auth/login')) {
+              final prefs = await SharedPreferences.getInstance();
+              final token = prefs.getString('token');
+              if (token != null) {
+                options.headers['Authorization'] = 'Bearer $token';
+              }
+            }
+            options.headers['Content-Type'] = 'application/json';
+            return handler.next(options);
+          },
+          onError: (error, handler) async {
+            // Handle 401 errors - token expired or invalid
+            if (error.response?.statusCode == 401) {
+              // Clear invalid token and redirect to login
+              await clearToken();
+              await clearUserData();
+              // You could add navigation logic here
+            }
+            return handler.next(error);
+          },
+        ),
+      );
+    }
     return _dioInstance!;
   }
 
   static Future<Map<String, String>> _getHeaders() async {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('token');
-    
     return {
       'Content-Type': 'application/json',
-      if (token != null) 'Authorization': 'Bearer $token',
     };
   }
 
