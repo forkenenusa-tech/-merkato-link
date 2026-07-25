@@ -1,143 +1,179 @@
-# Merkato Link Deployment Guide
+# Merkato Link Complete Deployment Guide
 
-This guide will help you deploy all components of the Merkato Link platform to free hosting services.
+This guide will help you deploy ALL components of the Merkato Link platform to free hosting services.
 
-## Prerequisites
+## 🎯 Deployment Overview
+
+**Backend**: Render.com ✅ (Already deployed: https://merkato-link.onrender.com)
+**Frontends**: Vercel.com (Admin, Staff, Seller, Driver)
+**Mobile App**: Flutter (Local testing + App Store deployment)
+
+## 📋 Prerequisites
 - GitHub account with repository: https://github.com/forkenenusa-tech/-merkato-link.git
-- MongoDB Atlas account (free tier)
-- Render.com account (free tier)
+- MongoDB Atlas account (free tier) ✅ (Already configured)
+- Render.com account (free tier) ✅ (Already deployed)
 - Vercel account (free tier)
 
-## 1. Backend Deployment (Render.com)
+## 🚀 Frontend Deployments (Vercel)
 
-### Step 1: Set up MongoDB Atlas
-1. Go to [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
-2. Create a free account
-3. Create a new cluster (free M0 tier)
-4. Create database user with username/password
-5. Network Access → Add IP Address → 0.0.0.0/0 (allow all IPs)
-6. Get connection string: `mongodb+srv://username:password@cluster.mongodb.net/merkato`
-
-### Step 2: Deploy Backend to Render
-1. Go to [Render.com](https://render.com)
-2. Create a free account
-3. Click "New +" → "Web Service"
-4. Connect GitHub repository: `forkenenusa-tech/-merkato-link`
-5. Configure:
-   - **Name**: merkato-backend
-   - **Root Directory**: `merkato-backend`
-   - **Build Command**: `npm install && npm run build`
-   - **Start Command**: `npm start`
-6. Add Environment Variables:
-   - `MONGO_URI`: Your MongoDB Atlas connection string
-   - `JWT_SECRET`: Generate a random secret (use: https://www.random.org/strings/)
-   - `NODE_ENV`: `production`
-   - `CLIENT_URL`: `*`
-   - `PORT`: `5000`
-7. Click "Deploy Web Service"
-
-### Step 3: Get Backend URL
-After deployment, Render will provide a URL like:
-```
-https://merkato-backend.onrender.com
-```
-
-## 2. Frontend Deployments (Vercel)
-
-### Admin Panel Deployment
-1. Go to [Vercel](https://vercel.com)
-2. Create a free account
-3. Click "Add New Project"
-4. Import GitHub repository: `forkenenusa-tech/-merkato-link`
-5. Configure:
+### Step 1: Deploy Admin Panel
+1. Go to [Vercel](https://vercel.com) and create a free account
+2. Click "Add New Project"
+3. Import GitHub repository: `forkenenusa-tech/-merkato-link`
+4. Configure:
+   - **Project Name**: `merkato-admin`
    - **Root Directory**: `merkato-admin`
    - **Framework Preset**: Vite
-6. Add Environment Variables:
-   - `VITE_API_URL`: Your Render backend URL
-7. Click "Deploy"
+5. Add Environment Variables:
+   - `VITE_API_URL`: `https://merkato-link.onrender.com`
+6. Click "Deploy"
+7. Save the deployed URL (e.g., `https://merkato-admin.vercel.app`)
 
-### Staff Panel Deployment
+### Step 2: Deploy Staff Panel
 1. In Vercel, click "Add New Project"
 2. Import same GitHub repository
 3. Configure:
+   - **Project Name**: `merkato-staff`
    - **Root Directory**: `merkato-staff`
    - **Framework Preset**: Vite
 4. Add Environment Variables:
-   - `VITE_API_URL`: Your Render backend URL
+   - `VITE_API_URL`: `https://merkato-link.onrender.com`
 5. Click "Deploy"
+6. Save the deployed URL (e.g., `https://merkato-staff.vercel.app`)
 
-### Seller Panel Deployment
+### Step 3: Deploy Seller Panel
 1. In Vercel, click "Add New Project"
 2. Import same GitHub repository
 3. Configure:
+   - **Project Name**: `merkato-seller`
    - **Root Directory**: `merkato-seller`
    - **Framework Preset**: Vite
 4. Add Environment Variables:
-   - `VITE_API_URL`: Your Render backend URL
+   - `VITE_API_URL`: `https://merkato-link.onrender.com`
 5. Click "Deploy"
+6. Save the deployed URL (e.g., `https://merkato-seller.vercel.app`)
 
-## 3. Mobile App Configuration
+### Step 4: Deploy Driver Panel
+1. In Vercel, click "Add New Project"
+2. Import same GitHub repository
+3. Configure:
+   - **Project Name**: `merkato-driver`
+   - **Root Directory**: `merkato-driver`
+   - **Framework Preset**: Vite
+4. Add Environment Variables:
+   - `VITE_API_URL`: `https://merkato-link.onrender.com`
+5. Click "Deploy"
+6. Save the deployed URL (e.g., `https://merkato-driver.vercel.app`)
 
-### Update API URL
-1. Edit `merkato-mobile/lib/services/api_service.dart`
-2. Change the baseUrl from `http://127.0.0.1:5001` to your Render backend URL:
-```dart
-baseUrl: dotenv.env['API_URL'] ?? 'https://merkato-backend.onrender.com',
+## 📱 Mobile App Configuration
+
+### Current Status
+- ✅ Backend URL configured to: `https://merkato-link.onrender.com`
+- ✅ Logo asset fixed (logo.jpg)
+- ✅ Ready for testing
+
+### Test Mobile App
+```bash
+cd merkato-mobile
+flutter run -d chrome
 ```
 
-3. Update `merkato-mobile/.env`:
-```
-API_URL=https://merkato-backend.onrender.com
-```
-
-### Build and Deploy Mobile App
+### Build for Production
 For web deployment:
 ```bash
 cd merkato-mobile
 flutter build web
 ```
 
-For mobile deployment, you'll need to:
-- Android: Upload APK to Google Play Store
-- iOS: Upload IPA to Apple App Store
+For mobile app stores:
+- **Android**: Build APK and upload to Google Play Store
+- **iOS**: Build IPA and upload to Apple App Store
 
-## 4. Testing Integration
+## 🔗 Integration Testing
 
-### Test Backend
+### 1. Test Backend API
 ```bash
-curl https://merkato-backend.onrender.com/api/health
+curl https://merkato-link.onrender.com/api/health
 ```
 
-### Test Frontend
-- Admin: Open your Vercel admin URL
-- Staff: Open your Vercel staff URL  
-- Seller: Open your Vercel seller URL
+### 2. Test Admin Panel
+- Open admin URL in browser
+- Register/login as admin
+- Test dashboard, user management, analytics
 
-### Test Mobile App
-1. Run mobile app with new API URL
-2. Test registration/login
-3. Test customer features
-4. Test seller features
+### 3. Test Staff Panel
+- Open staff URL in browser
+- Register/login as staff
+- Test order management, inventory
 
-## 5. Environment Variables Summary
+### 4. Test Seller Panel
+- Open seller URL in browser
+- Register/login as seller
+- Test product management, order management, analytics
 
-### Backend (Render.com)
+### 5. Test Driver Panel
+- Open driver URL in browser
+- Register/login as driver
+- Test order delivery, location tracking
+
+### 6. Test Mobile App
+- Run mobile app
+- Register as customer
+- Test shopping, cart, checkout, order tracking
+- Register as seller
+- Test seller dashboard integration
+
+## 🎯 Role-Based Functionality
+
+### Admin Role
+- User management (create, edit, delete users)
+- Role assignment (admin, staff, seller, driver, customer)
+- Platform analytics and reports
+- System configuration
+
+### Staff Role
+- Order management and fulfillment
+- Inventory management
+- Customer support
+- Store operations
+
+### Seller Role
+- Product management (add, edit, delete products)
+- Order management (view, update order status)
+- Sales analytics and reports
+- Store dashboard
+
+### Driver Role
+- Order delivery management
+- Location tracking
+- Delivery status updates
+- Earnings tracking
+
+### Customer Role (Mobile App)
+- Browse products and categories
+- Shopping cart management
+- Checkout and payment
+- Order tracking
+- Wishlist management
+
+## 📊 Environment Variables Summary
+
+### Backend (Render.com) ✅
 - `MONGO_URI`: MongoDB Atlas connection string
 - `JWT_SECRET`: Random secret key
 - `NODE_ENV`: `production`
 - `CLIENT_URL`: `*`
-- `PORT`: `5000`
 
 ### Frontends (Vercel)
-- `VITE_API_URL`: Render backend URL
+- `VITE_API_URL`: `https://merkato-link.onrender.com`
 
 ### Mobile App
-- `API_URL`: Render backend URL
+- `API_URL`: `https://merkato-link.onrender.com`
 
-## 6. Troubleshooting
+## 🔧 Troubleshooting
 
 ### Backend Issues
-- Check Render logs for errors
+- Check Render logs: https://dashboard.render.com
 - Verify MongoDB Atlas connection
 - Ensure IP whitelist includes 0.0.0.0/0
 
@@ -145,13 +181,15 @@ curl https://merkato-backend.onrender.com/api/health
 - Check Vercel deployment logs
 - Verify VITE_API_URL is correct
 - Clear browser cache
+- Check console for errors
 
 ### Mobile App Issues
 - Verify API_URL in .env file
 - Check network connectivity
 - Test API endpoints with curl
+- Check Flutter logs
 
-## 7. Free Tier Limitations
+## 💡 Free Tier Limitations
 
 ### Render.com
 - Free tier: 750 hours/month
@@ -162,17 +200,32 @@ curl https://merkato-backend.onrender.com/api/health
 - Free tier: 100GB bandwidth/month
 - Unlimited deployments
 - Automatic SSL certificates
+- Fast CDN
 
 ### MongoDB Atlas
 - Free tier: 512MB storage
 - Shared RAM
 - Good for development/testing
 
-## 8. Next Steps
+## ✅ Deployment Checklist
 
-After deployment:
-1. Test all user flows
-2. Monitor performance
-3. Set up error tracking
-4. Configure analytics
-5. Set up backup strategy
+- [x] Backend deployed to Render.com
+- [x] MongoDB Atlas configured
+- [x] Mobile app configured with backend URL
+- [x] Logo asset fixed
+- [ ] Admin panel deployed to Vercel
+- [ ] Staff panel deployed to Vercel
+- [ ] Seller panel deployed to Vercel
+- [ ] Driver panel deployed to Vercel
+- [ ] All components tested and integrated
+- [ ] Role-based functionality verified
+
+## 🎉 After Deployment
+
+1. **Test all user flows** for each role
+2. **Monitor performance** on all platforms
+3. **Set up error tracking** (Sentry, LogRocket)
+4. **Configure analytics** (Google Analytics)
+5. **Set up backup strategy** for database
+6. **Document API endpoints** for developers
+7. **Create user guides** for each role
