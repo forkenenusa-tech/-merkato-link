@@ -58,7 +58,7 @@ class MerkatoLogoImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Image.asset(
-      'assets/images/logo.png',
+      'assets/images/logo.jpg',
       width: size,
       height: size,
       fit: BoxFit.contain,
