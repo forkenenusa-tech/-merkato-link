@@ -102,16 +102,10 @@ const Login = () => {
             </button>
 
             <div className="text-center text-sm text-gray-500">
-              <p>Create Admin Account First:</p>
-              <p className="mt-1">Run this command then login:</p>
-              <code className="text-xs bg-gray-100 p-2 rounded block mt-2">
-                curl -X POST https://merkato-link.onrender.com/api/admin/create-admin \<br/>
-                -H "Content-Type: application/json" \<br/>
-                -d '&#123;"name":"Admin","email":"admin@merkato.link","password":"admin123","phone":"+251911111111"&#125;'
-              </code>
-              <p className="mt-2">
-                Then login with: admin@merkato.link / admin123
-              </p>
+              <p>Default Admin Credentials:</p>
+              <p className="mt-1 font-medium">Email: admin@merkato.link</p>
+              <p className="font-medium">Password: admin123</p>
+              <p className="mt-2 text-xs">Admin account is already created. Use these credentials to login.</p>
             </div>
           </form>
         </div>
