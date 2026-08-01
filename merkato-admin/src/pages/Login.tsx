@@ -17,6 +17,7 @@ const Login = () => {
 
     try {
       const response = await authApi.login(email, password)
+      console.log('Login response:', response.data)
       
       // Check if user is admin
       if (response.data.role !== 'admin') {
@@ -28,10 +29,13 @@ const Login = () => {
       // Save token and user data
       localStorage.setItem('token', response.data.token)
       localStorage.setItem('user', JSON.stringify(response.data))
+      console.log('Token saved:', response.data.token)
       
       // Redirect to dashboard
+      console.log('Redirecting to dashboard...')
       navigate('/')
     } catch (err: any) {
+      console.error('Login error:', err)
       setError(err.response?.data?.message || 'Login failed')
     } finally {
       setLoading(false)
@@ -103,8 +107,8 @@ const Login = () => {
 
             <div className="text-center text-sm text-gray-500">
               <p>Default Admin Credentials:</p>
-              <p className="mt-1 font-medium">Email: admin@merkato.link</p>
-              <p className="font-medium">Password: admin123</p>
+              <p className="mt-1 font-medium">Email: admin@test.com</p>
+              <p className="font-medium">Password: password123</p>
               <p className="mt-2 text-xs">Admin account is already created. Use these credentials to login.</p>
             </div>
           </form>

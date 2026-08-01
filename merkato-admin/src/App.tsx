@@ -20,6 +20,8 @@ function App() {
     const token = localStorage.getItem('token')
     const user = localStorage.getItem('user')
     
+    console.log('Checking auth - Token exists:', !!token, 'User exists:', !!user)
+    
     if (!token || !user) {
       setIsAuthenticated(false)
       return
@@ -29,18 +31,21 @@ function App() {
       // Verify token and check if user is admin
       const response = await api.get('/api/auth/profile')
       const userData = response.data
+      console.log('Profile check successful - Role:', userData.role)
       
       if (userData.role === 'admin') {
         setIsAuthenticated(true)
         setIsAdmin(true)
       } else {
         // Non-admin users cannot access admin portal
+        console.log('User is not admin, removing credentials')
         localStorage.removeItem('token')
         localStorage.removeItem('user')
         setIsAuthenticated(false)
         setIsAdmin(false)
       }
     } catch (error) {
+      console.error('Profile check failed:', error)
       localStorage.removeItem('token')
       localStorage.removeItem('user')
       setIsAuthenticated(false)
