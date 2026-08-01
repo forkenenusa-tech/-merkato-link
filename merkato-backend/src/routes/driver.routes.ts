@@ -200,4 +200,63 @@ router.post('/accept/:id', protect, authorize('driver'), asyncHandler(async (req
   });
 }));
 
+// @desc    Apply to become a driver
+// @route   POST /api/driver/apply
+// @access  Private
+router.post('/apply', protect, asyncHandler(async (req: any, res) => {
+  const { 
+    licenseNumber,
+    vehicleType,
+    plateNumber,
+    vehicleModel, 
+    vehicleColor,
+    yearsOfExperience,
+    insuranceProvider,
+    insuranceNumber,
+    licenseImage,
+    vehicleImage,
+    idFrontImage,
+    idBackImage
+  } = req.body;
+  
+  // Check if already a driver
+  if (req.user.role === 'driver') {
+    res.status(400).json({ message: 'Already a driver' });
+    return;
+  }
+  
+  // Check if already applied
+  const existingApplication = await DriverApplication.findOne({ userId: req.user._id });
+  if (existingApplication) {
+    res.status(400).json({ 
+      message: 'Application already submitted',
+      status: existingApplication.status 
+    });
+    return;
+  }
+  
+  // Create application
+  const application = await DriverApplication.create({
+    userId: req.user._id,
+    licenseNumber,
+    vehicleType: vehicleType || 'car',
+    plateNumber: plateNumber || req.body.vehiclePlate,
+    vehicleModel,
+    vehicleColor,
+    yearsOfExperience: yearsOfExperience ? parseInt(yearsOfExperience) : 0,
+    insuranceProvider,
+    insuranceNumber,
+    licenseImage,
+    vehicleImage,
+    idFrontImage,
+    idBackImage,
+    status: 'pending'
+  });
+  
+  res.status(201).json({
+    message: 'Driver application submitted successfully',
+    application
+  });
+}));
+
 export default router;

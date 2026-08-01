@@ -117,7 +117,14 @@ router.put('/profile', protect, asyncHandler(async (req: any, res) => {
     user.name = req.body.name || user.name;
     user.email = req.body.email || user.email;
     user.phone = req.body.phone || user.phone;
-    user.profileImage = req.body.profileImage || user.profileImage;
+    user.profileImage = req.body.profileImage !== undefined ? req.body.profileImage : user.profileImage;
+    user.address = req.body.address !== undefined ? req.body.address : user.address;
+    user.bio = req.body.bio !== undefined ? req.body.bio : user.bio;
+
+    // Allow switching active role if role is valid
+    if (req.body.role && ['customer', 'seller', 'driver'].includes(req.body.role)) {
+      user.role = req.body.role;
+    }
 
     if (req.body.password) {
       const salt = await bcrypt.genSalt(10);
@@ -133,7 +140,10 @@ router.put('/profile', protect, asyncHandler(async (req: any, res) => {
       phone: updatedUser.phone,
       role: updatedUser.role,
       isVerified: updatedUser.isVerified,
-      profileImage: updatedUser.profileImage
+      profileImage: updatedUser.profileImage,
+      address: updatedUser.address,
+      bio: updatedUser.bio,
+      approvedRoles: updatedUser.approvedRoles
     });
   } else {
     res.status(404).json({ message: 'User not found' });

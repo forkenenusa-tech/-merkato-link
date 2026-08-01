@@ -4,9 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:merkato_mobile/services/api_service.dart';
 import 'package:merkato_mobile/theme/app_theme.dart';
 import 'package:merkato_mobile/widgets/merkato_logo.dart';
-import 'home_screen.dart';
 import 'auth/login_screen.dart';
-import 'seller/seller_dashboard_screen.dart';
+import 'seller/seller_dashboard_enhanced.dart';
+import 'driver/driver_dashboard_screen.dart';
+import 'customer/home_screen_enhanced.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
@@ -64,7 +65,19 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
             context,
             PageRouteBuilder(
               pageBuilder: (context, animation, secondaryAnimation) =>
-                  const SellerDashboardScreen(),
+                  const SellerDashboardEnhanced(),
+              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                return FadeTransition(opacity: animation, child: child);
+              },
+              transitionDuration: const Duration(milliseconds: 500),
+            ),
+          );
+        } else if (role == 'driver') {
+          Navigator.pushReplacement(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) =>
+                  const DriverDashboardScreen(),
               transitionsBuilder: (context, animation, secondaryAnimation, child) {
                 return FadeTransition(opacity: animation, child: child);
               },
@@ -76,7 +89,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
             context,
             PageRouteBuilder(
               pageBuilder: (context, animation, secondaryAnimation) =>
-                  const HomeScreen(),
+                  const HomeScreenEnhanced(),
               transitionsBuilder: (context, animation, secondaryAnimation, child) {
                 return FadeTransition(opacity: animation, child: child);
               },

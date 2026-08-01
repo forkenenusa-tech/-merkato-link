@@ -5,6 +5,15 @@ export interface IDriverApplication extends Document {
   licenseNumber: string;
   vehicleType: 'motorcycle' | 'car' | 'van' | 'truck';
   plateNumber: string;
+  vehicleModel?: string;
+  vehicleColor?: string;
+  yearsOfExperience?: number;
+  insuranceProvider?: string;
+  insuranceNumber?: string;
+  licenseImage?: string;
+  vehicleImage?: string;
+  idFrontImage?: string;
+  idBackImage?: string;
   status: 'pending' | 'approved' | 'rejected';
   submittedAt: Date;
   reviewedAt?: Date;
@@ -33,6 +42,42 @@ const driverApplicationSchema = new Schema<IDriverApplication>({
     type: String,
     required: [true, 'Plate number is required'],
     trim: true
+  },
+  vehicleModel: {
+    type: String,
+    default: ''
+  },
+  vehicleColor: {
+    type: String,
+    default: ''
+  },
+  yearsOfExperience: {
+    type: Number,
+    default: 0
+  },
+  insuranceProvider: {
+    type: String,
+    default: ''
+  },
+  insuranceNumber: {
+    type: String,
+    default: ''
+  },
+  licenseImage: {
+    type: String,
+    default: ''
+  },
+  vehicleImage: {
+    type: String,
+    default: ''
+  },
+  idFrontImage: {
+    type: String,
+    default: ''
+  },
+  idBackImage: {
+    type: String,
+    default: ''
   },
   status: {
     type: String,

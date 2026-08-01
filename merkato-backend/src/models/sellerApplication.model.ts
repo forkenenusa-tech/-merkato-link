@@ -4,6 +4,17 @@ export interface ISellerApplication extends Document {
   userId: mongoose.Types.ObjectId;
   businessName: string;
   businessLicense: string;
+  taxId?: string;
+  businessAddress?: string;
+  businessPhone?: string;
+  businessEmail?: string;
+  yearsInBusiness?: number;
+  businessLicenseImage?: string;
+  taxCertificateImage?: string;
+  businessRegistrationImage?: string;
+  idFrontImage?: string;
+  idBackImage?: string;
+  businessPremisesImage?: string;
   status: 'pending' | 'approved' | 'rejected';
   submittedAt: Date;
   reviewedAt?: Date;
@@ -26,6 +37,50 @@ const sellerApplicationSchema = new Schema<ISellerApplication>({
   businessLicense: {
     type: String,
     required: [true, 'Business license is required']
+  },
+  taxId: {
+    type: String,
+    default: ''
+  },
+  businessAddress: {
+    type: String,
+    default: ''
+  },
+  businessPhone: {
+    type: String,
+    default: ''
+  },
+  businessEmail: {
+    type: String,
+    default: ''
+  },
+  yearsInBusiness: {
+    type: Number,
+    default: 0
+  },
+  businessLicenseImage: {
+    type: String,
+    default: ''
+  },
+  taxCertificateImage: {
+    type: String,
+    default: ''
+  },
+  businessRegistrationImage: {
+    type: String,
+    default: ''
+  },
+  idFrontImage: {
+    type: String,
+    default: ''
+  },
+  idBackImage: {
+    type: String,
+    default: ''
+  },
+  businessPremisesImage: {
+    type: String,
+    default: ''
   },
   status: {
     type: String,

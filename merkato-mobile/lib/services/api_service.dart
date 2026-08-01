@@ -249,6 +249,24 @@ class ApiService {
     );
   }
 
+  // Generic GET method
+  static Future<Response> get(String endpoint, {Map<String, dynamic>? queryParameters}) async {
+    return await dio.get(
+      endpoint,
+      queryParameters: queryParameters,
+      options: Options(headers: await _getHeaders()),
+    );
+  }
+
+  // Generic POST method
+  static Future<Response> post(String endpoint, {Map<String, dynamic>? data}) async {
+    return await dio.post(
+      endpoint,
+      data: data != null ? jsonEncode(data) : null,
+      options: Options(headers: await _getHeaders()),
+    );
+  }
+
   // Helper methods
   static Future<void> saveToken(String token) async {
     final prefs = await SharedPreferences.getInstance();

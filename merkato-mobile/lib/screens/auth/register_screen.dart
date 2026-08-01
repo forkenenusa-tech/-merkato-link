@@ -2,14 +2,56 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:merkato_mobile/services/api_service.dart';
 import 'package:merkato_mobile/screens/home_screen.dart';
-import 'package:merkato_mobile/screens/seller/seller_dashboard_screen.dart';
+import 'package:merkato_mobile/screens/seller/seller_dashboard_enhanced.dart';
+import 'package:merkato_mobile/screens/driver/driver_dashboard_screen.dart';
 import 'package:merkato_mobile/theme/app_theme.dart';
 
-class RegisterScreen extends ConsumerStatefulWidget {
+// Temporary redirect to enhanced version
+class RegisterScreen extends StatelessWidget {
   const RegisterScreen({super.key});
 
   @override
-  ConsumerState<RegisterScreen> createState() => _RegisterScreenState();
+  Widget build(BuildContext context) {
+    // Redirect to enhanced register screen
+    Future.delayed(Duration.zero, () {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const RegisterScreenEnhanced()),
+      );
+    });
+
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const CircularProgressIndicator(),
+            const SizedBox(height: 20),
+            const Text('Loading enhanced registration...'),
+            const SizedBox(height: 10),
+            TextButton(
+              onPressed: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const RegisterScreenEnhanced()),
+                );
+              },
+              child: const Text('Click here if not redirected'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// Keep old class for reference but not used
+class _OldRegisterScreen extends ConsumerStatefulWidget {
+  const _OldRegisterScreen({super.key});
+
+  @override
+  ConsumerState<_OldRegisterScreen> createState() => __OldRegisterScreenState();
 }
 
 class _RegisterScreenState extends ConsumerState<RegisterScreen> {
@@ -59,7 +101,12 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
           if (role == 'seller') {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const SellerDashboardScreen()),
+              MaterialPageRoute(builder: (context) => const SellerDashboardEnhanced()),
+            );
+          } else if (role == 'driver') {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const DriverDashboardScreen()),
             );
           } else {
             Navigator.pushReplacement(

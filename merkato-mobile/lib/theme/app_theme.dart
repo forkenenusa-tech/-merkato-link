@@ -7,6 +7,8 @@ class AppColors {
   static const gold = Color(0xFFF4A900);
   static const goldLight = Color(0xFFFFF8E7);
   static const errorRed = Color(0xFFE63946);
+  static const successGreen = Color(0xFF4CAF50);
+  static const warningYellow = Color(0xFFFFC107);
   static const textDark = Color(0xFF1A1A1A);
   static const textGrey = Color(0xFF757575);
   static const borderGrey = Color(0xFFE0E0E0);

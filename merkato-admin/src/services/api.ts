@@ -1,6 +1,7 @@
 import axios from 'axios'
 
-const API_BASE = (import.meta.env.VITE_API_URL || 'http://localhost:5000').replace(/\/$/, '')
+// Direct URL - Vercel will replace VITE_API_URL during build
+const API_BASE = 'https://merkato-link.onrender.com'
 
 const api = axios.create({
   baseURL: API_BASE,
@@ -37,6 +38,9 @@ export const authApi = {
     api.post('/api/auth/login', { email, password }),
   
   getProfile: () => api.get('/api/auth/profile'),
+  
+  createAdmin: (data: any) =>
+    api.post('/api/admin/create-admin', data),
 }
 
 export const adminApi = {
@@ -49,18 +53,19 @@ export const adminApi = {
     api.put(`/api/admin/users/${id}`, data),
   
   getProducts: (params?: any) => 
-    api.get('/api/products', { params }),
+    api.get('/api/admin/products', { params }),
   
   deleteProduct: (id: string) => 
     api.delete(`/api/products/${id}`),
-}
-
-export const staffApi = {
+  
   getApplications: (params?: any) => 
-    api.get('/api/staff/applications', { params }),
+    api.get('/api/admin/applications', { params }),
   
   verifyApplication: (id: string, data: any) => 
-    api.put(`/api/staff/verify/${id}`, data),
+    api.put(`/api/admin/verify/${id}`, data),
+  
+  getOrders: (params?: any) =>
+    api.get('/api/admin/orders', { params }),
 }
 
 export default api

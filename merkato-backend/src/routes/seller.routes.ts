@@ -68,7 +68,21 @@ router.get('/orders', protect, authorize('seller'), asyncHandler(async (req: any
 // @route   POST /api/seller/apply
 // @access  Private
 router.post('/apply', protect, asyncHandler(async (req: any, res) => {
-  const { businessName, businessLicense } = req.body;
+  const { 
+    businessName, 
+    businessLicense,
+    taxId,
+    businessAddress,
+    businessPhone,
+    businessEmail,
+    yearsInBusiness,
+    businessLicenseImage,
+    taxCertificateImage,
+    businessRegistrationImage,
+    idFrontImage,
+    idBackImage,
+    businessPremisesImage
+  } = req.body;
   
   // Check if already a seller
   if (req.user.role === 'seller') {
@@ -91,6 +105,17 @@ router.post('/apply', protect, asyncHandler(async (req: any, res) => {
     userId: req.user._id,
     businessName,
     businessLicense,
+    taxId,
+    businessAddress,
+    businessPhone,
+    businessEmail,
+    yearsInBusiness: yearsInBusiness ? parseInt(yearsInBusiness) : 0,
+    businessLicenseImage,
+    taxCertificateImage,
+    businessRegistrationImage,
+    idFrontImage,
+    idBackImage,
+    businessPremisesImage,
     status: 'pending'
   });
   

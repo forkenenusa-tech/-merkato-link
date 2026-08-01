@@ -28,6 +28,22 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       home: const SplashScreen(),
+      // Enhanced navigation routes
+      routes: {
+        // Auth routes
+        '/register': (context) => const RegisterScreenEnhanced(),
+        // Enhanced screens
+        '/profile': (context) => const ProfileScreenEnhanced(),
+        '/driver/verification': (context) => const DriverVerificationEnhanced(),
+        // Customer screens
+        '/customer/home': (context) => const HomeScreenEnhanced(),
+        '/customer/checkout': (context) => CheckoutScreen(
+          cartItems: const [],
+          subtotal: 0,
+          deliveryFee: 0,
+          total: 0,
+        ),
+      },
     );
   }
 }

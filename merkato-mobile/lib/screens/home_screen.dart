@@ -4,6 +4,9 @@ import 'package:merkato_mobile/screens/auth/login_screen.dart';
 import 'package:merkato_mobile/screens/customer/cart_screen.dart';
 import 'package:merkato_mobile/screens/customer/wishlist_screen.dart';
 import 'package:merkato_mobile/screens/customer/order_tracking_screen.dart';
+import 'package:merkato_mobile/screens/profile/profile_screen.dart';
+import 'package:merkato_mobile/screens/seller/seller_dashboard_enhanced.dart';
+import 'package:merkato_mobile/screens/driver/driver_dashboard_screen.dart';
 import 'package:merkato_mobile/services/api_service.dart';
 import 'package:merkato_mobile/theme/app_theme.dart';
 import 'package:merkato_mobile/widgets/home/custom_bottom_nav.dart';
@@ -60,7 +63,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             _buildPlaceholder('Categories', Icons.grid_view),
             _buildPlaceholder('Scan & Pay', Icons.qr_code_scanner),
             const OrderTrackingScreen(),
-            _buildAccountTab(),
+            const ProfileScreen(),
           ],
         ),
       ),
@@ -226,10 +229,29 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
           ),
           ListTile(leading: const Icon(Icons.home), title: const Text('Home'), onTap: () { Navigator.pop(context); setState(() => _currentIndex = 0); }),
+          ListTile(leading: const Icon(Icons.person), title: const Text('My Profile'), onTap: () { Navigator.pop(context); setState(() => _currentIndex = 4); }),
           ListTile(leading: const Icon(Icons.grid_view), title: const Text('Categories'), onTap: () { Navigator.pop(context); setState(() => _currentIndex = 1); }),
           ListTile(leading: const Icon(Icons.shopping_cart), title: const Text('My Cart'), onTap: () { Navigator.pop(context); _navigateToCart(); }),
           ListTile(leading: const Icon(Icons.favorite), title: const Text('My Wishlist'), onTap: () { Navigator.pop(context); _navigateToWishlist(); }),
           ListTile(leading: const Icon(Icons.receipt_long), title: const Text('Orders'), onTap: () { Navigator.pop(context); setState(() => _currentIndex = 3); }),
+          if (_userData?['role'] == 'seller')
+            ListTile(
+              leading: const Icon(Icons.storefront, color: AppColors.accentGreen),
+              title: const Text('Seller Dashboard'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const SellerDashboardEnhanced()));
+              },
+            ),
+          if (_userData?['role'] == 'driver')
+            ListTile(
+              leading: const Icon(Icons.local_shipping, color: AppColors.accentGreen),
+              title: const Text('Driver Dashboard'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const DriverDashboardScreen()));
+              },
+            ),
           ListTile(leading: const Icon(Icons.help_outline), title: const Text('Help & Support'), onTap: () => Navigator.pop(context)),
           const Divider(),
           ListTile(

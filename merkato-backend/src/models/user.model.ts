@@ -5,9 +5,12 @@ export interface IUser extends Document {
   email: string;
   password: string;
   phone: string;
-  role: 'customer' | 'seller' | 'staff' | 'admin' | 'driver';
+  role: 'customer' | 'seller' | 'admin' | 'driver';
   isVerified: boolean;
   profileImage?: string;
+  address?: string;
+  bio?: string;
+  approvedRoles?: string[];
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -39,7 +42,7 @@ const userSchema = new Schema<IUser>({
   },
   role: {
     type: String,
-    enum: ['customer', 'seller', 'staff', 'admin', 'driver'],
+    enum: ['customer', 'seller', 'admin', 'driver'],
     default: 'customer'
   },
   isVerified: {
@@ -50,6 +53,18 @@ const userSchema = new Schema<IUser>({
     type: String,
     default: ''
   },
+  address: {
+    type: String,
+    default: ''
+  },
+  bio: {
+    type: String,
+    default: ''
+  },
+  approvedRoles: [{
+    type: String,
+    default: ['customer']
+  }],
   isActive: {
     type: Boolean,
     default: true

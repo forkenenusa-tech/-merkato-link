@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:merkato_mobile/services/api_service.dart';
 import 'package:merkato_mobile/screens/home_screen.dart';
-import 'package:merkato_mobile/screens/seller/seller_dashboard_screen.dart';
+import 'package:merkato_mobile/screens/seller/seller_dashboard_enhanced.dart';
 import 'package:merkato_mobile/theme/app_theme.dart';
 import 'package:merkato_mobile/widgets/merkato_logo.dart';
 import 'register_screen.dart';
@@ -44,7 +44,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           if (role == 'seller') {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const SellerDashboardScreen()),
+              MaterialPageRoute(builder: (context) => const SellerDashboardEnhanced()),
             );
           } else {
             Navigator.pushReplacement(
